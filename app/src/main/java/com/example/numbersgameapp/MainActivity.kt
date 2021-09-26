@@ -1,35 +1,37 @@
 package com.example.numbersgameapp
 
 import android.app.AlertDialog
-import android.content.DialogInterface
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.EditText
-import android.view.Gravity
 import android.widget.Button
-
-import android.widget.TextView
+import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.text.set
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import java.lang.Exception
 import kotlin.random.Random
 
 
 class MainActivity : AppCompatActivity() {
 
     private val randomNumber= Random.nextInt(11)
+    private lateinit var note : ConstraintLayout
+    private lateinit var myRV : RecyclerView
+    private lateinit var button : Button
+    private lateinit var entry : EditText
+
+    private var countGussies = 4
+    private lateinit var list : ArrayList<String>
+
 
     private fun playAgain(){
 
         val dialogBuilder = AlertDialog.Builder(this)
 
         dialogBuilder.setMessage("The Correct Answer was $randomNumber \nWould You Like To Play Again:")
-            .setPositiveButton("Yes", DialogInterface.OnClickListener {
-                    _, _ -> this.recreate()
-            })
+            .setCancelable(false)
+            .setPositiveButton("Yes") { _, _ -> this.recreate() }
+            //.setNegativeButton("No"){dialog,_ -> dialog.cancel()}
 
         val alert=dialogBuilder.create()
         alert.setTitle("Game Over!!")
@@ -37,21 +39,41 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+
+    private fun show(str:ArrayList<String>){
+        myRV.adapter = RecyclerViewAdapter(str)
+        myRV.layoutManager = LinearLayoutManager(this)
+        if(str.size!=0)
+            myRV.smoothScrollToPosition(str.size-1)
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val note=findViewById<ConstraintLayout>(R.id.mainL)
-        val myRV=findViewById<RecyclerView>(R.id.rvMain)
-        val button=findViewById<Button>(R.id.BGuss)
-        val entry=findViewById<EditText>(R.id.Entry)
+        if(savedInstanceState!=null){
+            countGussies= savedInstanceState.getInt("countGussies", 0)
+            list = savedInstanceState.getStringArrayList("RecycleView")!!
+        }
+        else
+            list= arrayListOf()
 
-        var countGussies=4
-        val list= arrayListOf<String>()
+        note=findViewById(R.id.mainL)
+        myRV=findViewById(R.id.rvMain)
+        button=findViewById(R.id.BGuss)
+        entry=findViewById(R.id.Entry)
+
+        if(countGussies<=0){
+            countGussies=4
+            list= arrayListOf()
+        }
+        else
+            show(list)
 
         button.setOnClickListener {
             try {
-                var number = entry.text.toString().toInt()
+                val number = entry.text.toString().toInt()
 
                 if(number<0||number>10){
                     Snackbar.make(note, "Please Enter Number between 0 and 10 Only", Snackbar.LENGTH_LONG).show()
@@ -68,8 +90,7 @@ class MainActivity : AppCompatActivity() {
                                     "You Have $countGussies Gussies Left")
                     }
 
-                    myRV.adapter = RecyclerViewAdapter(list)
-                    myRV.layoutManager = LinearLayoutManager(this)
+                    show(list)
 
                     entry.text = null
                 }
@@ -81,6 +102,12 @@ class MainActivity : AppCompatActivity() {
                 entry.text=null
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("countGussies", countGussies)
+        outState.putStringArrayList("RecycleView", list)
 
     }
 }

@@ -11,8 +11,10 @@
         android:id="@+id/WelcomeMs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="#000000"
         android:text="Guss The Number From 0 to 10"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/rvMain"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,12 +23,16 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMain"
         android:layout_width="210dp"
-        android:layout_height="265dp"
+        android:layout_height="100dp"
 
+        android:fadeScrollbars="false"
+        android:scrollbarAlwaysDrawHorizontalTrack="false"
+        android:scrollbarAlwaysDrawVerticalTrack="false"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/WelcomeMs">
+        app:layout_constraintTop_toBottomOf="@+id/WelcomeMs"
+        app:stackFromEnd="false">
 
     </androidx.recyclerview.widget.RecyclerView>
 
