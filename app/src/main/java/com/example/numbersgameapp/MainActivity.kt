@@ -14,7 +14,7 @@ import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
 
-    private val randomNumber= Random.nextInt(11)
+    private var randomNumber= Random.nextInt(11)
     private lateinit var note : ConstraintLayout
     private lateinit var myRV : RecyclerView
     private lateinit var button : Button
@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         if(savedInstanceState!=null){
             countGussies= savedInstanceState.getInt("countGussies", 0)
             list = savedInstanceState.getStringArrayList("RecycleView")!!
+            randomNumber = savedInstanceState.getInt("random",0)
         }
         else
             list= arrayListOf()
@@ -67,6 +68,7 @@ class MainActivity : AppCompatActivity() {
         if(countGussies<=0){
             countGussies=4
             list= arrayListOf()
+            randomNumber= Random.nextInt(11)
         }
         else
             show(list)
@@ -108,6 +110,7 @@ class MainActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
         outState.putInt("countGussies", countGussies)
         outState.putStringArrayList("RecycleView", list)
+        outState.putInt("random",randomNumber)
 
     }
 }
